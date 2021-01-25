@@ -1,0 +1,36 @@
+<UserControl x:Class="Converter.Wpf.ConverterUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Converter.Wpf" 
+             mc:Ignorable="d">
+    
+    <UserControl.Resources>
+        <local:IsValidToBrushConverter x:Key="foregroundConverter"/>
+        <local:InverseBooleanConverter x:Key="inverseBoolConverter"/>
+    </UserControl.Resources>
+    
+    <StackPanel>
+        <Label>Range: [0, 999999999,99], no leading 0s, separator: ','</Label>
+        <ProgressBar IsIndeterminate="{Binding Path=ConvertCmd.IsExecuting}" />
+        <DockPanel LastChildFill="True" Margin="0 5 0 5">
+            <Button 
+                VerticalAlignment="Center" 
+                DockPanel.Dock="Right" 
+                Margin="5 0 0 0"
+                Padding="5 0 5 0" 
+                Background="LightBlue" 
+                Command="{Binding Path=ConvertCmd}"
+                CommandParameter="{Binding ElementName=NumberTxtBox, Path=Text}">convert to words</Button>
+            <TextBox 
+                Name="NumberTxtBox"
+                Background="AliceBlue" 
+                IsEnabled="{Binding Path=ConvertCmd.IsExecuting, Converter={StaticResource inverseBoolConverter}}"
+                Foreground="{Binding Path=IsValid, Mode=OneWay, Converter={StaticResource foregroundConverter}}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                Text="{Binding Path=UserInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
+        <TextBlock Text="{Binding Path=Words}" Background="AliceBlue" TextWrapping="Wrap"/>
+    </StackPanel>
+</UserControl>
